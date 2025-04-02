@@ -13,7 +13,6 @@ export const connectToDatabase = async () => {
 
   try {
     connection = await mongoose.connect(MONGODB_URI, {
-      dbName: "vn-event",
       bufferCommands: false,
     });
 
