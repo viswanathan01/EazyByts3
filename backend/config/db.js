@@ -1,23 +1,26 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
+if (!MONGODB_URI) {
+  throw new Error("🚨 MONGODB_URI is missing from environment variables!");
+}
+
+let connection = null;
+
 export const connectToDatabase = async () => {
+  if (connection) return connection;
+
   try {
-    if (!MONGODB_URI) throw new Error('MONGODB_URI is missing');
-    
-    await mongoose.connect(MONGODB_URI, {
+    connection = await mongoose.connect(MONGODB_URI, {
+      dbName: "vn-event",
       bufferCommands: false,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
     });
 
-    console.log('✅ MongoDB connected successfully');
+    console.log("✅ MongoDB connected successfully");
+    return connection;
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error);
+    console.error("❌ MongoDB connection error:", error);
     process.exit(1);
   }
 };
