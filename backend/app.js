@@ -32,6 +32,11 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
 });
 
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "Welcome to the Event Management API!" });
+  });
+
+  
 // Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
