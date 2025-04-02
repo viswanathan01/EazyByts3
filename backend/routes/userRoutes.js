@@ -1,27 +1,37 @@
-const express = require("express");
-const User = require("../models/User");
+import express from 'express';
+import { createOrUpdateUser, deleteUser, getUserById } from '../controllers/userController';
 
 const router = express.Router();
 
-// Create User
-router.post("/", async (req, res) => {
+// Webhook routes for Clerk
+router.post('/webhook/user', async (req, res) => {
   try {
-    const newUser = new User(req.body);
-    await newUser.save();
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const { type, data } = req.body;
+    
+    if (type === 'user.created' || type === 'user.updated') {
+      const user = await createOrUpdateUser(data);
+      return res.status(200).json(user);
+    }
+    
+    if (type === 'user.deleted') {
+      const user = await deleteUser(data.id);
+      return res.status(200).json(user);
+    }
+    
+    res.status(200).json({ message: 'Webhook received but no action taken' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Get All Users
-router.get("/", async (req, res) => {
+// Get user by ID
+router.get('/:id', async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const user = await getUserById(req.params.id);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
   }
 });
 
-module.exports = router;
+export default router;

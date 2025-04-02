@@ -1,17 +1,20 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+import mongoose from 'mongoose';
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("MongoDB connected");
-  } catch (err) {
-    console.error("Database Connection Error:", err);
-    process.exit(1);
-  }
+const MONGODB_URI = process.env.MONGODB_URI;
+
+let cached = global.mongoose || { conn: null, promise: null };
+
+export const connectToDatabase = async () => {
+  if (cached.conn) return cached.conn;
+
+  if(!MONGODB_URI) throw new Error('MONGODB_URI is missing');
+
+  cached.promise = cached.promise || mongoose.connect(MONGODB_URI, {
+    dbName: 'vn-event',
+    bufferCommands: false,
+  });
+
+  cached.conn = await cached.promise;
+
+  return cached.conn;
 };
-
-module.exports = connectDB;

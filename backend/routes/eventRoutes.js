@@ -1,38 +1,66 @@
-const express = require("express");
-const Event = require("../models/Event");
+import express from 'express';
+import {
+  createEvent,
+  getAllEvents,
+  getEventById,
+  updateEvent,
+  deleteEvent,
+} from '../controllers/eventController';
+import authMiddleware from '../middlewares/auth';
 
 const router = express.Router();
 
-// Create Event
-router.post("/", async (req, res) => {
+// Get all events
+router.get('/', async (req, res) => {
   try {
-    const newEvent = new Event(req.body);
-    await newEvent.save();
-    res.status(201).json(newEvent);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const events = await getAllEvents(req.query);
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Get All Events
-router.get("/", async (req, res) => {
+// Get single event
+router.get('/:id', async (req, res) => {
   try {
-    const events = await Event.find().populate("category organizer");
-    res.json(events);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const event = await getEventById(req.params.id);
+    res.status(200).json(event);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
   }
 });
 
-// Get Single Event
-router.get("/:id", async (req, res) => {
+// Protected routes (require authentication)
+router.use(authMiddleware);
+
+// Create event
+router.post('/', async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id).populate("category organizer");
-    if (!event) return res.status(404).json({ error: "Event not found" });
-    res.json(event);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const event = await createEvent(req.body, req.userId);
+    res.status(201).json(event);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
-module.exports = router;
+// Update event
+router.put('/:id', async (req, res) => {
+  try {
+    const event = await updateEvent(req.params.id, req.body, req.userId);
+    res.status(200).json(event);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Delete event
+router.delete('/:id', async (req, res) => {
+  try {
+    const event = await deleteEvent(req.params.id, req.userId);
+    res.status(200).json(event);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+export default router;
