@@ -1,6 +1,6 @@
-import Order from '../models/Order';
-import Event from '../models/Event';
-import User from '../models/User';
+import Order from '../models/Order.js';
+import Event from '../models/Event.js';
+import User from '../models/User.js';
 
 // Create a new order
 export const createOrder = async (orderData) => {

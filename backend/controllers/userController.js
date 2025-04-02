@@ -1,4 +1,4 @@
-import User from '../models/User';
+import User from '../models/User.js';
 
 // Create or update user from Clerk webhook
 export const createOrUpdateUser = async (clerkUser) => {

@@ -1,5 +1,5 @@
 import { Webhook } from 'svix';
-import { createOrUpdateUser, deleteUser } from '../controllers/userController';
+import { createOrUpdateUser, deleteUser } from '../controllers/userController.js';
 
 export const handleClerkWebhook = async (req, res) => {
   try {

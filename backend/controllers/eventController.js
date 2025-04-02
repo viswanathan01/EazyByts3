@@ -1,5 +1,5 @@
-import Event from '../models/Event';
-import User from '../models/User';
+import Event from '../models/Event.js';
+import User from '../models/User.js';
 
 // Create a new event
 export const createEvent = async (eventData, userId) => {

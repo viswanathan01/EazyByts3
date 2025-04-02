@@ -5,8 +5,8 @@ import {
   getEventById,
   updateEvent,
   deleteEvent,
-} from '../controllers/eventController';
-import authMiddleware from '../middlewares/auth';
+} from '../controllers/eventController.js';
+import authMiddleware from '../middlewares/auth.js';
 
 const router = express.Router();
 
