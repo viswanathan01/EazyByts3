@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { connectToDatabase } from './config/db';
-import userRoutes from './routes/userRoutes';
-import eventRoutes from './routes/eventRoutes';
-import categoryRoutes from './routes/categoryRoutes';
-import orderRoutes from './routes/orderRoutes';
-import { handleClerkWebhook } from './utils/webhook';
+import { connectToDatabase } from './config/db.js';
+import userRoutes from './routes/userRoutes.js';
+import eventRoutes from './routes/eventRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import { handleClerkWebhook } from './utils/webhook.js';
 
 const app = express();
 
